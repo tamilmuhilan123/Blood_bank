@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Dashboard</title>
+    <link rel="stylesheet" href="donaradmin.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Donor Dashboard</h1>
+        </header>
+
+        <nav class="dashboard-nav">
+            <button class="nav-btn" id="donationHistoryBtn">Donation History</button>
+            <button class="nav-btn" id="upcomingAppointmentsBtn">Upcoming Appointments</button>
+            <button class="nav-btn" id="eligibilityCheckerBtn">Eligibility Checker</button>
+        </nav>
+
+        <main class="dashboard-content">
+            <section id="donationHistory" class="dashboard-section">
+                <h2>Donation History</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Location</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2024-01-15</td>
+                            <td>City Hospital</td>
+                            <td>1 Unit</td>
+                        </tr>
+                        <tr>
+                            <td>2024-03-10</td>
+                            <td>Red Cross Center</td>
+                            <td>2 Units</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="upcomingAppointments" class="dashboard-section hidden">
+                <h2>Upcoming Donation Appointments</h2>
+                <ul>
+                    <li>2025-02-10 at Green Clinic</li>
+                    <li>2025-03-20 at City Blood Bank</li>
+                </ul>
+            </section>
+
+   
+            <section id="eligibilityChecker" class="dashboard-section hidden">
+                <h2>Eligibility Checker</h2>
+                <form id="eligibilityForm">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" placeholder="Enter your age" required>
+
+                    <label for="weight">Weight (kg):</label>
+                    <input type="number" id="weight" name="weight" placeholder="Enter your weight" required>
+
+                    <label for="medical">Do you have any recent medical conditions?</label>
+                    <select id="medical" name="medical" required>
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+
+                    <button type="submit">Check Eligibility</button>
+                </form>
+                <p id="eligibilityResult" class="hidden"></p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+    const donationHistoryBtn = document.getElementById('donationHistoryBtn');
+    const upcomingAppointmentsBtn = document.getElementById('upcomingAppointmentsBtn');
+    const eligibilityCheckerBtn = document.getElementById('eligibilityCheckerBtn');
+
+    const donationHistory = document.getElementById('donationHistory');
+    const upcomingAppointments = document.getElementById('upcomingAppointments');
+    const eligibilityChecker = document.getElementById('eligibilityChecker');
+
+    const sections = [donationHistory, upcomingAppointments, eligibilityChecker];
+
+    const showSection = (section) => {
+        sections.forEach(sec => sec.classList.remove('active'));
+        section.classList.add('active');
+    };
+
+    donationHistoryBtn.addEventListener('click', () => showSection(donationHistory));
+    upcomingAppointmentsBtn.addEventListener('click', () => showSection(upcomingAppointments));
+    eligibilityCheckerBtn.addEventListener('click', () => showSection(eligibilityChecker));
+
+   
+    const eligibilityForm = document.getElementById('eligibilityForm');
+    const eligibilityResult = document.getElementById('eligibilityResult');
+
+    eligibilityForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const age = parseInt(document.getElementById('age').value.trim(), 10);
+        const weight = parseInt(document.getElementById('weight').value.trim(), 10);
+        const medical = document.getElementById('medical').value;
+
+        if (age >= 18 && age <= 65 && weight >= 50 && medical === 'no') {
+            eligibilityResult.textContent = 'You are eligible to donate blood!';
+            eligibilityResult.style.color = 'green';
+        } else {
+            eligibilityResult.textContent = 'You are not eligible to donate blood.';
+            eligibilityResult.style.color = 'red';
+        }
+
+        eligibilityResult.classList.remove('hidden');
+    });
+});
+
+    </script>
+</body>
+</html>

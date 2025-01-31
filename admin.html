@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Admin Dashboard</h1>
+        </header>
+        <nav class="dashboard-nav">
+            <button class="nav-btn" id="overviewBtn">Overview</button>
+            <button class="nav-btn" id="inventoryBtn">Manage Blood Inventory</button>
+            <button class="nav-btn" id="donorManagementBtn">Donor Management</button>
+            <button class="nav-btn" id="recipientManagementBtn">Recipient Management</button>
+            <button class="nav-btn" id="appointmentsBtn">Appointment Scheduling</button>
+            <button class="nav-btn" id="reportsBtn">Reports & Analytics</button>
+        </nav>
+        <main class="dashboard-content">
+            <section id="overviewSection" class="dashboard-section active">
+                <h2>Overview</h2>
+                <div class="statistics">
+                    <div class="stat-box">
+                        <h3>Total Donors</h3>
+                        <p id="totalDonors">150</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Blood Requests</h3>
+                        <p id="totalRequests">50</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Available Blood Units</h3>
+                        <p id="bloodUnits">200</p>
+                    </div>
+                </div>
+            </section>
+            <section id="inventorySection" class="dashboard-section">
+                <h2>Manage Blood Inventory</h2>
+                <form id="inventoryForm">
+                    <label for="bloodGroup">Blood Group:</label>
+                    <select id="bloodGroup" name="bloodGroup">
+                        <option value="" disabled selected>Select Blood Group</option>
+                        <option value="A+">A+</option>
+                        <option value="B+">B+</option>
+                        <option value="O+">O+</option>
+                        <option value="AB+">AB+</option>
+                        <option value="A-">A-</option>
+                        <option value="B-">B-</option>
+                        <option value="O-">O-</option>
+                        <option value="AB-">AB-</option>
+                    </select>
+
+                    <label for="units">Units:</label>
+                    <input type="number" id="units" name="units" placeholder="Enter units" min="1" required>
+
+                    <label for="expiryDate">Expiry Date:</label>
+                    <input type="date" id="expiryDate" name="expiryDate" required>
+
+                    <button type="submit">Add Blood Stock</button>
+                </form>
+                <table id="inventoryTable">
+                    <thead>
+                        <tr>
+                            <th>Blood Group</th>
+                            <th>Units</th>
+                            <th>Expiry Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </section>
+            <section id="donorManagementSection" class="dashboard-section">
+                <h2>Donor Management</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Donor Name</th>
+                            <th>Contact</th>
+                            <th>Blood Group</th>
+                            <th>Eligibility</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John Doe</td>
+                            <td>123-456-7890</td>
+                            <td>A+</td>
+                            <td>Eligible</td>
+                        </tr>
+                        <tr>
+                            <td>Jane Smith</td>
+                            <td>987-654-3210</td>
+                            <td>O-</td>
+                            <td>Not Eligible</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section id="recipientManagementSection" class="dashboard-section">
+                <h2>Recipient Management</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Recipient Name</th>
+                            <th>Blood Group</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recipientTable">
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="appointmentsSection" class="dashboard-section">
+                <h2>Appointment Scheduling</h2>
+                <form id="appointmentForm">
+                    <label for="donorName">Donor Name:</label>
+                    <input type="text" id="donorName" name="donorName" placeholder="Enter donor name" required>
+
+                    <label for="appointmentDate">Date:</label>
+                    <input type="date" id="appointmentDate" name="appointmentDate" required>
+
+                    <label for="appointmentTime">Time:</label>
+                    <input type="time" id="appointmentTime" name="appointmentTime" required>
+
+                    <button type="submit">Schedule Appointment</button>
+                </form>
+            </section>
+<section id="reportsSection" class="dashboard-section">
+    <h2>Reports & Analytics</h2>
+    <p>Generate and view reports for blood inventory, donation trends, and requests.</p>
+    <button id="generateReportBtn">Generate Report</button>
+    <div id="reportContainer">
+    </div>
+</section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.dashboard-section');
+            const buttons = document.querySelectorAll('.nav-btn');
+        
+            buttons.forEach((btn, index) => {
+                btn.addEventListener('click', () => {
+                    sections.forEach((section, secIndex) => {
+                        if (secIndex === index) {
+                            section.classList.add('active');
+                        } else {
+                            section.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const recipientTable = document.getElementById('recipientTable');
+            const totalRequestsElement = document.getElementById('totalRequests');  
+        
+            
+            function loadRequests() {
+                const requests = JSON.parse(localStorage.getItem('bloodRequests')) || [];
+                recipientTable.innerHTML = '';
+        
+                requests.forEach((req, index) => {
+                    const row = `
+                        <tr>
+                            <td>${req.requestId}</td>
+                            <td>${req.name}</td>
+                            <td>${req.bloodGroup}</td>
+                            <td id="status-${index}">${req.status}</td>
+                            <td>
+                                <button onclick="updateStatus(${index}, 'approved')">Approve</button>
+                                <button onclick="updateStatus(${index}, 'declined')">Decline</button>
+                                <button onclick="deleteRequest(${index})">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                    recipientTable.innerHTML += row;
+                });
+        
+               
+                updateTotalRequests();
+            }
+        
+    
+            window.updateStatus = function(index, status) {
+                const requests = JSON.parse(localStorage.getItem('bloodRequests')) || [];
+                requests[index].status = status;
+                localStorage.setItem('bloodRequests', JSON.stringify(requests));
+        
+                document.getElementById(`status-${index}`).textContent = status;
+        
+              
+                if (status === 'approved') {
+                    incrementBloodRequestsCount();
+                }
+        
+                
+                updateRecipientDashboard();
+            };
+        
+         
+            window.deleteRequest = function(index) {
+                const requests = JSON.parse(localStorage.getItem('bloodRequests')) || [];
+                requests.splice(index, 1); 
+                localStorage.setItem('bloodRequests', JSON.stringify(requests));
+        
+               
+                loadRequests();
+            };
+        
+            
+            function incrementBloodRequestsCount() {
+                const totalRequests = parseInt(totalRequestsElement.textContent) || 0;
+                totalRequestsElement.textContent = totalRequests + 1;
+            }
+        
+            
+            function updateTotalRequests() {
+                const requests = JSON.parse(localStorage.getItem('bloodRequests')) || [];
+                const approvedRequestsCount = requests.filter(req => req.status === 'approved').length;
+                totalRequestsElement.textContent = approvedRequestsCount;
+            }
+        
+            
+            function updateRecipientDashboard() {
+              
+                const event = new CustomEvent('statusUpdated');
+                window.dispatchEvent(event);
+            }
+        
+            loadRequests();
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const inventoryForm = document.getElementById('inventoryForm');
+            const inventoryTable = document.getElementById('inventoryTable').getElementsByTagName('tbody')[0];
+            
+          
+            function loadInventory() {
+                const inventory = JSON.parse(localStorage.getItem('bloodInventory')) || [];
+        
+                
+                inventoryTable.innerHTML = '';
+        
+                inventory.forEach((item, index) => {
+                    const row = `
+                        <tr>
+                            <td>${item.bloodGroup}</td>
+                            <td>${item.units}</td>
+                            <td>${item.expiryDate}</td>
+                            <td>
+                                <button onclick="deleteInventoryItem(${index})">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                    inventoryTable.innerHTML += row;
+                });
+            }
+        
+            
+            inventoryForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+        
+                const bloodGroup = document.getElementById('bloodGroup').value;
+                const units = document.getElementById('units').value;
+                const expiryDate = document.getElementById('expiryDate').value;
+        
+                if (bloodGroup && units && expiryDate) {
+                    const newInventoryItem = {
+                        bloodGroup: bloodGroup,
+                        units: units,
+                        expiryDate: expiryDate,
+                    };
+        
+                    
+                    const inventory = JSON.parse(localStorage.getItem('bloodInventory')) || [];
+                    inventory.push(newInventoryItem);
+                    localStorage.setItem('bloodInventory', JSON.stringify(inventory));
+        
+                   
+                    loadInventory();
+                }
+            });
+        
+          
+            window.deleteInventoryItem = function(index) {
+                const inventory = JSON.parse(localStorage.getItem('bloodInventory')) || [];
+                inventory.splice(index, 1); 
+                localStorage.setItem('bloodInventory', JSON.stringify(inventory));
+        
+                
+                loadInventory();
+            };
+        
+           
+            loadInventory();
+        });
+            document.addEventListener('DOMContentLoaded', () => {
+                const donorTableBody = document.querySelector('#donorManagementSection table tbody');
+            
+             
+                function loadDonors() {
+                    const donors = JSON.parse(localStorage.getItem('donors')) || [];
+                    donorTableBody.innerHTML = ''; 
+            
+                    donors.forEach(donor => {
+                        const row = `
+                            <tr>
+                                <td>${donor.name}</td>
+                                <td>${donor.phone}</td>
+                                <td>${donor.bloodGroup}</td>
+                                <td>${donor.eligibility}</td>
+                            </tr>
+                        `;
+                        donorTableBody.innerHTML += row;
+                    });
+                }
+            
+                
+                loadDonors();
+            });
+            document.addEventListener('DOMContentLoaded', () => {
+                const generateReportBtn = document.getElementById('generateReportBtn');
+                const reportContainer = document.getElementById('reportContainer');
+            
+             
+                function loadDataForReport() {
+                    
+                    const inventoryData = JSON.parse(localStorage.getItem('bloodInventory')) || [];
+                    
+                  
+                    const donorData = JSON.parse(localStorage.getItem('donors')) || [];
+                    
+                    
+                    const requestsData = JSON.parse(localStorage.getItem('bloodRequests')) || [];
+            
+                    
+                    let reportContent = `
+                        <h3>Blood Inventory Report</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Blood Group</th>
+                                    <th>Units</th>
+                                    <th>Expiry Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+            
+                    inventoryData.forEach(item => {
+                        reportContent += `
+                            <tr>
+                                <td>${item.bloodGroup}</td>
+                                <td>${item.units}</td>
+                                <td>${item.expiryDate}</td>
+                            </tr>
+                        `;
+                    });
+            
+                    reportContent += `</tbody></table>`;
+            
+                  
+                    reportContent += `
+                        <h3>Donor Management Report</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Donor Name</th>
+                                    <th>Contact</th>
+                                    <th>Blood Group</th>
+                                    <th>Eligibility</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+            
+                    donorData.forEach(donor => {
+                        reportContent += `
+                            <tr>
+                                <td>${donor.name}</td>
+                                <td>${donor.phone}</td>
+                                <td>${donor.bloodGroup}</td>
+                                <td>${donor.eligibility}</td>
+                            </tr>
+                        `;
+                    });
+            
+                    reportContent += `</tbody></table>`;
+            
+                
+                    reportContent += `
+                        <h3>Recipient Requests Report</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Request ID</th>
+                                    <th>Recipient Name</th>
+                                    <th>Blood Group</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+            
+                    requestsData.forEach(request => {
+                        reportContent += `
+                            <tr>
+                                <td>${request.requestId}</td>
+                                <td>${request.name}</td>
+                                <td>${request.bloodGroup}</td>
+                                <td>${request.status}</td>
+                            </tr>
+                        `;
+                    });
+            
+                    reportContent += `</tbody></table>`;
+            
+                    
+                    reportContainer.innerHTML = reportContent;
+                }
+            
+                generateReportBtn.addEventListener('click', () => {
+                    loadDataForReport();
+                });
+            });
+            
+            </script>
+</body>
+</html>

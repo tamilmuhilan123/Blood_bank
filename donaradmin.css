@@ -1,0 +1,194 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+    font-size: 2.5rem;
+    color: #333;
+    animation: fadeIn 1s ease-out;
+}
+
+
+.dashboard-nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.nav-btn {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+}
+
+.nav-btn:hover {
+    background-color: #4caf50;
+    transform: translateY(-3px);
+}
+
+.nav-btn:focus {
+    outline: none;
+}
+
+.nav-btn.active {
+    background-color: #4caf50;
+}
+
+
+.dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.dashboard-section {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.dashboard-section.active {
+    display: block;
+    opacity: 1;
+}
+
+
+#donationHistory table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#donationHistory th, #donationHistory td {
+    padding: 15px;
+    text-align: left;
+}
+
+#donationHistory th {
+    background-color: #4caf50;
+    color: white;
+}
+
+#donationHistory tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#donationHistory tr:hover {
+    background-color: #f0f0f0;
+    transition: background-color 0.3s ease;
+}
+
+#upcomingAppointments ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#upcomingAppointments li {
+    padding: 10px 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #ccc;
+}
+
+#upcomingAppointments li:last-child {
+    border-bottom: none;
+}
+
+
+#eligibilityForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#eligibilityForm label {
+    font-size: 1rem;
+    color: #333;
+}
+
+#eligibilityForm input, #eligibilityForm select {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border 0.3s ease;
+}
+
+#eligibilityForm input:focus, #eligibilityForm select:focus {
+    border-color: #4caf50;
+}
+
+#eligibilityForm button {
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#eligibilityForm button:hover {
+    background-color: #4caf50;
+    transform: translateY(-3px);
+}
+
+
+#eligibilityResult {
+    font-size: 1.1rem;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+    animation: fadeIn 1s ease-out;
+}
+
+#eligibilityResult.hidden {
+    display: none;
+}
+
+#eligibilityResult.green {
+    color: green;
+}
+
+#eligibilityResult.red {
+    color: red;
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+

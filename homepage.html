@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank Management System</title>
+    <link rel="stylesheet" href="homepage.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">Blood Bank</div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="bloodavailable.html">Blood Availability</a></li>
+                    <li><a href="bloodrequest.html">Request Blood</a></li>
+                    <li><a href="donarregister.html">Donar Register</a></li>
+                    <li><a href="adminlogin.html">Admin</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+
+    <main>
+
+        <section id="home" class="overview">
+            <h1>Welcome to the Blood Bank</h1>
+            <p>We provide blood to those in need and save lives. Join us in making a difference!</p>
+        </section>
+
+   
+        <section id="stats" class="key-stats">
+            <div class="stat-card">
+                <h2>Blood Available</h2>
+                <p id="blood-availability">500L</p>
+            </div>
+            <div class="stat-card">
+                <h2>Donors Registered</h2>
+                <p id="donors-registered">2000+</p>
+            </div>
+        </section>
+
+     
+        <section id="blood-availability" class="donation-camps">
+            <h2>Upcoming Blood Donation Camps</h2>
+            <div class="camp">
+                <p><strong>Camp 1:</strong> 10th February 2025 at Central Park</p>
+                <p><strong>Camp 2:</strong> 20th February 2025 at City Hospital</p>
+                <a href="#register-camp" class="btn">Register for Participation</a>
+            </div>
+        </section>
+
+     
+        <section id="faqs" class="faqs">
+            <h2>Frequently Asked Questions</h2>
+            <ul>
+                <li><strong>How can I donate blood?</strong> <br> Visit one of our camps or donate at a local center.</li>
+                <li><strong>How can I request blood?</strong> <br> Fill out the request form under 'Request Blood'.</li>
+                <li><strong>Is donating blood safe?</strong> <br> Yes, the process is safe and professionally supervised.</li>
+            </ul>
+        </section>
+
+        <section id="contact" class="contact">
+            <h2>Contact Us</h2>
+            <form id="contactForm">
+                <input type="text" id="name" placeholder="Your Name" required>
+                <input type="email" id="email" placeholder="Your Email" required>
+                <textarea id="message" placeholder="Your Message" required></textarea>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+            <p>Address: 123 Blood Bank Street, City, Country</p>
+            <div id="map"></div> 
+        </section>
+    </main>
+
+    
+    <footer>
+        <p>&copy; 2025 Blood Bank Management System. All rights reserved.</p>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+       
+    document.getElementById('contactForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    if (name && email && message) {
+        alert('Message Sent Successfully!');
+       
+    } else {
+        alert('Please fill out all fields.');
+    }
+});
+
+
+function initMap() {
+    const bloodBankLocation = { lat: 40.712776, lng: -74.005974 }; 
+    const map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: bloodBankLocation
+    });
+    const marker = new google.maps.Marker({
+        position: bloodBankLocation,
+        map: map,
+        title: "Blood Bank Location"
+        
+    });
+}
+
+    </script>
+</body>
+</html>

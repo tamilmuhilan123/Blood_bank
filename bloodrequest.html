@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Request System</title>
+    <link rel="stylesheet" href="bloodrequest.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Request Blood</h1>
+        <form id="bloodRequestForm">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <label for="bloodGroup">Blood Group:</label>
+            <select id="bloodGroup" name="bloodGroup" required>
+                <option value="" disabled selected>Select Blood Group</option>
+                <option value="A+">A+</option>
+                <option value="B+">B+</option>
+                <option value="O+">O+</option>
+                <option value="AB+">AB+</option>
+                <option value="A-">A-</option>
+                <option value="B-">B-</option>
+                <option value="O-">O-</option>
+                <option value="AB-">AB-</option>
+            </select>
+
+            <label for="reason">Reason for Request:</label>
+            <textarea id="reason" name="reason" required></textarea>
+
+            <button type="submit">Submit Request</button>
+        </form>
+
+        <a href="recipientdash.html" class="dashboard-link">Go to Recipient Dashboard</a>
+    </div>
+
+    <script>
+        document.getElementById('bloodRequestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const bloodGroup = document.getElementById('bloodGroup').value;
+            const reason = document.getElementById('reason').value.trim();
+            const requestId = 'REQ' + Math.floor(Math.random() * 10000);
+            const requestDate = new Date().toISOString().split('T')[0];
+            const status = 'Pending';
+
+            const requestData = { requestId, name, bloodGroup, status, requestDate };
+
+            let requests = JSON.parse(localStorage.getItem('bloodRequests')) || [];
+            requests.push(requestData);
+            localStorage.setItem('bloodRequests', JSON.stringify(requests));
+
+            alert('Blood request submitted successfully!');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

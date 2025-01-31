@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank Management - Register & Login</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 400px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .switch-link {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .switch-link a {
+            color: #4caf50;
+            text-decoration: none;
+        }
+
+        .switch-link a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container" id="registerSection">
+        <h2>Create Account</h2>
+        <form id="registerForm">
+            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="registerPassword" placeholder="Password" required>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+            <button type="submit" id="registerBtn">Register</button>
+            <p class="switch-link">Already have an account? <a href="#" id="showLogin">Login</a></p>
+        </form>
+    </div>
+
+    <div class="form-container hidden" id="loginSection">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit" id="loginBtn">Login</button>
+            <p class="switch-link">Don't have an account? <a href="#" id="showRegister">Register</a></p>
+        </form>
+    </div>
+
+    <script>
+        const registerSection = document.getElementById('registerSection');
+        const loginSection = document.getElementById('loginSection');
+        const showLogin = document.getElementById('showLogin');
+        const showRegister = document.getElementById('showRegister');
+
+        showLogin.addEventListener('click', () => {
+            registerSection.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+        });
+
+        showRegister.addEventListener('click', () => {
+            loginSection.classList.add('hidden');
+            registerSection.classList.remove('hidden');
+        });
+
+     
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('registerPassword').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            const userData = { fullName, email, password };
+
+           
+            fetch('http://localhost:5000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Registration successful!') {
+                    alert(data.message);
+                    registerSection.classList.add('hidden');
+                    loginSection.classList.remove('hidden');
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Registration failed');
+            });
+        });
+
+     
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            const loginData = { email, password };
+
+          
+            fetch('http://localhost:5000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(loginData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Login successful!') {
+                    alert(data.message);
+                   
+                    window.location.href = 'homepage.html';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Login failed');
+            });
+        });
+    </script>
+</body>
+</html>

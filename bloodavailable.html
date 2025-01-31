@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Availability Search</title>
+    <link rel="stylesheet" href="bloodavailable.css">
+</head>
+<body>
+    <div class="search-container">
+        <header class="search-header">
+            <h1>Blood Availability Search</h1>
+        </header>
+
+        <main class="search-main">
+            <form id="searchForm">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" placeholder="Enter location" required>
+
+                <label for="bloodGroup">Blood Group:</label>
+                <select id="bloodGroup" name="bloodGroup" required>
+                    <option value="" disabled selected>Select Blood Group</option>
+                    <option value="A+">A+</option>
+                    <option value="B+">B+</option>
+                    <option value="O+">O+</option>
+                    <option value="AB+">AB+</option>
+                    <option value="A-">A-</option>
+                    <option value="B-">B-</option>
+                    <option value="O-">O-</option>
+                    <option value="AB-">AB-</option>
+                </select>
+
+                <label for="quantity">Minimum Quantity (in units):</label>
+                <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" min="1" required>
+
+                <button type="submit">Search</button>
+            </form>
+
+            <div id="resultsContainer" class="results-container hidden">
+                <h2>Search Results</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Blood Group</th>
+                            <th>Location</th>
+                            <th>Available Quantity</th>
+                            <th>Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTable">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const location = document.getElementById('location').value.trim();
+            const bloodGroup = document.getElementById('bloodGroup').value;
+            const quantity = parseInt(document.getElementById('quantity').value, 10);
+
+            const bloodData = [
+                { bloodGroup: 'A+', location: 'Erode', quantity: 5, contact: '123-456-7890' },
+                { bloodGroup: 'B+', location: 'Chennai', quantity: 3, contact: '987-654-3210' },
+                { bloodGroup: 'O+', location: 'Coimbatore', quantity: 7, contact: '555-555-5555' },
+                { bloodGroup: 'A+', location: 'Salem', quantity: 2, contact: '444-444-4444' },
+                { bloodGroup: 'AB-', location: 'Madurai', quantity: 6, contact: '999-888-7777' },
+                { bloodGroup: 'O-', location: 'Tiruchirappalli', quantity: 4, contact: '666-555-4444' },
+                { bloodGroup: 'B-', location: 'Thoothukudi', quantity: 3, contact: '333-222-1111' },
+                { bloodGroup: 'AB+', location: 'Tirunelveli', quantity: 5, contact: '777-666-5555' },
+                { bloodGroup: 'A-', location: 'Kanchipuram', quantity: 4, contact: '222-333-4444' },
+                { bloodGroup: 'B+', location: 'Dindigul', quantity: 6, contact: '555-444-3333' },
+                { bloodGroup: 'O+', location: 'Villupuram', quantity: 7, contact: '888-999-0000' },
+            ];
+
+            const filteredData = bloodData.filter(item =>
+                item.location.toLowerCase().includes(location.toLowerCase()) &&
+                item.bloodGroup === bloodGroup &&
+                item.quantity >= quantity
+            );
+
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultsTable = document.getElementById('resultsTable');
+            resultsTable.innerHTML = '';
+
+            if (filteredData.length > 0) {
+                filteredData.forEach(item => {
+                    const row = `
+                        <tr>
+                            <td>${item.bloodGroup}</td>
+                            <td>${item.location}</td>
+                            <td>${item.quantity} Unit(s)</td>
+                            <td>${item.contact}</td>
+                        </tr>
+                    `;
+                    resultsTable.innerHTML += row;
+                });
+                resultsContainer.classList.remove('hidden');
+            } else {
+                resultsTable.innerHTML = '<tr><td colspan="4">No results found.</td></tr>';
+                resultsContainer.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipient Dashboard</title>
+    <link rel="stylesheet" href="recipientdash.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Recipient Dashboard</h1>
+
+        <section id="requestHistory">
+            <h2>Request History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Name</th>
+                        <th>Blood Group</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTable"></tbody>
+            </table>
+        </section>
+
+        <section id="trackStatus">
+            <h2>Track Request Status</h2>
+            <form id="trackForm">
+                <label for="requestId">Enter Request ID:</label>
+                <input type="text" id="requestId" required>
+                <button type="submit">Track</button>
+            </form>
+            <p id="statusResult"></p>
+        </section>
+
+        <a href="bloodrequest.html" class="back-link">Back to Request Form</a>
+    </div>
+
+    <script>
+        function updateHistoryTable() {
+            const historyTable = document.getElementById('historyTable');
+            historyTable.innerHTML = '';
+            const requests = JSON.parse(localStorage.getItem('bloodRequests')) || [];
+            requests.forEach(req => {
+                const row = `<tr>
+                    <td>${req.requestId}</td>
+                    <td>${req.name}</td>
+                    <td>${req.bloodGroup}</td>
+                    <td>${req.status}</td>
+                    <td>${req.requestDate}</td>
+                </tr>`;
+                historyTable.innerHTML += row;
+            });
+        }
+        
+        document.getElementById('trackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const requestId = document.getElementById('requestId').value.trim();
+            const requests = JSON.parse(localStorage.getItem('bloodRequests')) || [];
+            const request = requests.find(req => req.requestId === requestId);
+        
+            if (request) {
+                document.getElementById('statusResult').textContent = `Status: ${request.status}`;
+            } else {
+                document.getElementById('statusResult').textContent = 'Request ID not found.';
+            }
+        });
+        
+
+        window.addEventListener('statusUpdated', updateHistoryTable);
+        
+
+        window.onload = updateHistoryTable;
+        
+        
+    </script>
+</body>
+</html>

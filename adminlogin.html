@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="adminlogin.css">
+</head>
+<body>
+    <div class="login-container">
+        <form id="adminLoginForm" class="login-form">
+            <h1>Admin Login</h1>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <span class="error-message" id="emailError"></span>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <span class="error-message" id="passwordError"></span>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+            <p class="auth-message" id="authMessage"></p>
+        </form>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('adminLoginForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const authMessage = document.getElementById('authMessage');
+
+
+    const adminCredentials = {
+        email: "admin@gmail.com",
+        password: "admin123"
+    };
+
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+ 
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        emailError.style.display = 'none';
+        passwordError.style.display = 'none';
+        authMessage.style.color = '#555555';
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+        let isValid = true;
+
+
+        if (!isValidEmail(email)) {
+            emailError.textContent = "Please enter a valid email address.";
+            emailError.style.display = 'block';
+            isValid = false;
+        }
+
+        if (password.length < 6) {
+            passwordError.textContent = "Password must be at least 6 characters.";
+            passwordError.style.display = 'block';
+            isValid = false;
+        }
+
+
+        if (isValid) {
+            if (email === adminCredentials.email && password === adminCredentials.password) {
+                authMessage.textContent = "Login successful! Redirecting...";
+                authMessage.style.color = "green";
+
+
+                setTimeout(() => {
+                    window.location.href = "admin.html"; 
+                }, 2000);
+            } else {
+                authMessage.textContent = "Invalid email or password. Please try again.";
+                authMessage.style.color = "red";
+            }
+        }
+    });
+});
+
+    </script>
+</body>
+</html>
